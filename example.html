@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <form>
+      <input required type="file" accept="image/*" />
+      <button>Save</button>
+    </form>
+    <img height="500" alt="Upload an image..." />
+    <script>
+      const form = document.querySelector("form");
+      const input = document.querySelector("input");
+      const img = document.querySelector("img");
+
+      form.onsubmit = async (ev) => {
+        ev.preventDefault();
+        const file = input.files[0];
+        fetch("http://localhost:5000/api/rem-bg", {
+          body: await file.arrayBuffer(),
+          method: "POST",
+          headers: {
+            "Content-Type": file.type,
+            Authorization:
+              "Bearer a913fdd051543b2ed05608023f167d94719bb8498897bc09f0d0a81ad958235429c6018a170306c5503211dc5edcd938292f554c6bbf330fe57096d83b01d433",
+          },
+        }).then(async (res) => {
+          const image = await res.blob();
+          img.src = URL.createObjectURL(image);
+          img.alt = "Result";
+        });
+      };
+    </script>
+  </body>
+</html>
